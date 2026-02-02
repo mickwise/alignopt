@@ -3,6 +3,7 @@
         "alignopt",
         "allclose",
         "arange",
+        "multiplicatively",
         "wordlevel"
     ]
 }

@@ -7,10 +7,9 @@ These tests validate that completion_logprobs_torch(...) correctly:
 1) aligns logits with next-token targets (causal LM shift),
 2) extracts realized token log-probabilities (token-level NLL),
 3) masks out prompt tokens and padding tokens using start_positions from the text backend,
-4) sums completion-only token log-probabilities per example,
-5) respects device placement (explicit device and device=None inference),
-6) preserves and restores model config state (use_cache toggling),
-7) remains differentiable for training use (gradient flows to model parameters).
+4) sums completion-only token log-probabilities per example,,
+5) preserves and restores model config state (use_cache toggling),
+6) remains differentiable for training use (gradient flows to model parameters).
 
 Key behaviors
 -------------
@@ -288,7 +287,6 @@ def test_completion_logprobs_masks_prompt_tokens() -> None:
         model=model,
         tokenizer=tokenizer,
         pairs=pairs,
-        device=torch.device("cpu"),
         max_length=16,
     )
 
@@ -331,7 +329,6 @@ def test_completion_logprobs_respects_padding_mask_in_batch() -> None:
         model=model,
         tokenizer=tokenizer,
         pairs=pairs,
-        device=torch.device("cpu"),
         max_length=16,
     )
 
@@ -369,7 +366,6 @@ def test_completion_logprobs_truncation_removes_completion_yields_zero() -> None
         model=model,
         tokenizer=tokenizer,
         pairs=pairs,
-        device=torch.device("cpu"),
         max_length=2,
     )
 
@@ -408,7 +404,6 @@ def test_completion_logprobs_invalid_max_length_raises() -> None:
             model=model,
             tokenizer=tokenizer,
             pairs=pairs,
-            device=torch.device("cpu"),
             max_length=0,
         )
 
@@ -441,7 +436,6 @@ def test_device_none_uses_model_parameter_device_cpu() -> None:
         model=model,
         tokenizer=tokenizer,
         pairs=pairs,
-        device=None,
         max_length=16,
     )
 
@@ -479,7 +473,6 @@ def test_device_none_uses_model_parameter_device_accelerator() -> None:
         model=model,
         tokenizer=tokenizer,
         pairs=pairs,
-        device=None,
         max_length=16,
     )
 
@@ -520,7 +513,6 @@ def test_use_cache_toggled_off_during_forward_and_restored() -> None:
         model=model,
         tokenizer=tokenizer,
         pairs=pairs,
-        device=torch.device("cpu"),
         max_length=16,
     )
 
@@ -563,7 +555,6 @@ def test_use_cache_restored_even_if_forward_raises() -> None:
             model=model,
             tokenizer=tokenizer,
             pairs=pairs,
-            device=torch.device("cpu"),
             max_length=16,
         )
 
@@ -592,7 +583,6 @@ def test_completion_logprobs_is_differentiable_and_propagates_gradients() -> Non
         model=model,
         tokenizer=tokenizer,
         pairs=pairs,
-        device=torch.device("cpu"),
         max_length=16,
     )
 
@@ -636,7 +626,6 @@ def test_completion_logprobs_dtype_is_float_tensor() -> None:
         model=model,
         tokenizer=tokenizer,
         pairs=pairs,
-        device=torch.device("cpu"),
         max_length=16,
     )
 
